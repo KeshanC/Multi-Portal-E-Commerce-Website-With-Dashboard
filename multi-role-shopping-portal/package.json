@@ -1,0 +1,11 @@
+{
+  "name": "multi-role-shopping-portal",
+  "version": "1.0.0",
+  "description": "Multi-role e-commerce workspace with real-time SVG dashboards",
+  "scripts": {
+    "start": "npx -y http-server -p 8000"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

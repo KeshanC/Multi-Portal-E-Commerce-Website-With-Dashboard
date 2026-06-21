@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus Multi-Role Shopping Portal</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dark-theme">
+
+  <!-- ================= AUTH PORTAL ================= -->
+  <div id="auth-portal" class="auth-container">
+    <div class="auth-card glassmorphic">
+      <div class="auth-header">
+        <div class="brand">
+          <div class="brand-logo"><i data-lucide="shopping-bag"></i></div>
+          <span class="brand-name">NEXUS</span>
+        </div>
+        <p class="auth-subtitle">E-Commerce Unified Workspace</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-login-btn">Sign In</button>
+        <button class="auth-tab-btn" id="tab-register-btn">Register</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form">
+        <div class="input-group">
+          <label for="login-email">Gmail Address</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail"></i>
+            <input type="email" id="login-email" placeholder="name@gmail.com" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock"></i>
+            <input type="password" id="login-password" placeholder="••••••••" required>
+          </div>
+        </div>
+        <div id="login-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form hidden">
+        <div class="input-group">
+          <label for="reg-name">Full Name</label>
+          <div class="input-wrapper">
+            <i data-lucide="user"></i>
+            <input type="text" id="reg-name" placeholder="John Doe" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="reg-email">Gmail Address</label>
+          <div class="input-wrapper">
+            <i data-lucide="mail"></i>
+            <input type="email" id="reg-email" placeholder="john@gmail.com" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label for="reg-password">Password</label>
+          <div class="input-wrapper">
+            <i data-lucide="lock"></i>
+            <input type="password" id="reg-password" placeholder="Min. 6 characters" required>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label for="reg-gender">Gender</label>
+            <div class="input-wrapper">
+              <i data-lucide="users"></i>
+              <select id="reg-gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="reg-role">Account Type</label>
+            <div class="input-wrapper">
+              <i data-lucide="shield"></i>
+              <select id="reg-role" required>
+                <option value="user">User (Customer)</option>
+                <option value="supplier">Supplier (Merchant)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="reg-error" class="form-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ================= SYSTEM SHELL LAYOUT ================= -->
+  <div id="app-shell" class="shell-container hidden">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar glassmorphic">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo"><i data-lucide="shopping-bag"></i></div>
+          <span class="brand-name">NEXUS</span>
+        </div>
+      </div>
+
+      <!-- Current Profile Details -->
+      <div class="profile-summary">
+        <div class="avatar" id="user-avatar">U</div>
+        <div class="profile-info">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <h4 id="profile-name">Loading...</h4>
+            <button id="edit-profile-name-btn" class="btn-icon btn-xs" style="background: transparent; color: var(--text-secondary); border: none; cursor: pointer; width: 14px; height: 14px; padding: 0;" title="Edit Name">
+              <i data-lucide="edit-2" style="width: 12px; height: 12px;"></i>
+            </button>
+          </div>
+          <span id="profile-role" class="badge">User</span>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs (Dynamically shown per role) -->
+      <nav class="navigation-menu">
+        <!-- Admin Navigation -->
+        <div id="nav-admin" class="nav-group hidden">
+          <button class="nav-item active" data-tab="admin-dashboard">
+            <i data-lucide="layout-dashboard"></i> Dashboard
+          </button>
+          <button class="nav-item" data-tab="admin-management">
+            <i data-lucide="users"></i> Management
+          </button>
+          <button class="nav-item" data-tab="admin-shopping">
+            <i data-lucide="shopping-cart"></i> Shopping
+          </button>
+        </div>
+
+        <!-- Supplier Navigation -->
+        <div id="nav-supplier" class="nav-group hidden">
+          <button class="nav-item active" data-tab="supplier-dashboard">
+            <i data-lucide="line-chart"></i> Dashboard
+          </button>
+          <button class="nav-item" data-tab="supplier-add">
+            <i data-lucide="plus-circle"></i> Add Items
+          </button>
+          <button class="nav-item" data-tab="supplier-orders">
+            <i data-lucide="package"></i> Orders
+          </button>
+          <button class="nav-item" data-tab="supplier-stock">
+            <i data-lucide="database"></i> Stock
+          </button>
+        </div>
+
+        <!-- User Navigation -->
+        <div id="nav-user" class="nav-group hidden">
+          <button class="nav-item active" data-tab="user-shop">
+            <i data-lucide="shopping-bag"></i> Shop
+          </button>
+          <button class="nav-item" data-tab="user-dashboard">
+            <i data-lucide="user"></i> Dashboard
+          </button>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="logout-btn" class="btn btn-danger btn-block btn-sm">
+          <i data-lucide="log-out"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Upper Header Info -->
+      <header class="content-header glassmorphic">
+        <div class="header-left">
+          <h1 id="view-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+          <!-- 2-Minute Sync Clock Banner -->
+          <div id="sync-banner" class="sync-banner">
+            <div class="sync-indicator pulse-glow"></div>
+            <span id="sync-text">Updating in 120s</span>
+            <div class="sync-progress"><div class="sync-bar" id="sync-bar"></div></div>
+            <button id="sync-now-btn" class="btn btn-icon btn-xs" title="Force Sync Now">
+              <i data-lucide="refresh-cw"></i>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Views Container -->
+      <div class="view-viewport">
+
+        <!-- ================= ADMIN VIEWS ================= -->
+        <!-- Admin Dashboard Tab -->
+        <section id="view-admin-dashboard" class="app-view hidden">
+          <div class="stats-row">
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Total Registered Users</span>
+                <i data-lucide="users" class="icon-user"></i>
+              </div>
+              <h2 class="stat-value" id="admin-stat-users">0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Active Suppliers</span>
+                <i data-lucide="shield" class="icon-supplier"></i>
+              </div>
+              <h2 class="stat-value" id="admin-stat-suppliers">0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Total Daily Sales</span>
+                <i data-lucide="trending-up" class="icon-sales"></i>
+              </div>
+              <h2 class="stat-value" id="admin-stat-sales">0</h2>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="chart-card glassmorphic">
+              <h3>Gender Distribution</h3>
+              <div class="chart-content flex-center" id="admin-gender-chart">
+                <!-- SVG Gender Donut Chart will be injected here -->
+              </div>
+            </div>
+            <div class="chart-card glassmorphic">
+              <h3>Daily Orders Performance</h3>
+              <div class="chart-content" id="admin-orders-chart">
+                <!-- SVG Orders Bar Chart will be injected here -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Admin Management Tab -->
+        <section id="view-admin-management" class="app-view hidden">
+          <div class="table-container glassmorphic">
+            <div class="table-header">
+              <h2>User & Supplier Directory</h2>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Gender</th>
+                  <th>Contact</th>
+                  <th>Address</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="management-table-body">
+                <!-- User rows dynamically injected -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Admin Shopping Tab (Proxy for normal shop) -->
+        <section id="view-admin-shopping" class="app-view hidden">
+          <!-- Standard Shop content gets mirrored here -->
+        </section>
+
+
+        <!-- ================= SUPPLIER VIEWS ================= -->
+        <!-- Supplier Dashboard Tab -->
+        <section id="view-supplier-dashboard" class="app-view hidden">
+          <div class="stats-row">
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Total Received Orders</span>
+                <i data-lucide="package" class="icon-orders"></i>
+              </div>
+              <h2 class="stat-value" id="supplier-stat-orders">0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Gross Revenue</span>
+                <i data-lucide="dollar-sign" class="icon-revenue"></i>
+              </div>
+              <h2 class="stat-value" id="supplier-stat-revenue">$0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Cancelled Orders</span>
+                <i data-lucide="x-circle" class="icon-cancelled"></i>
+              </div>
+              <h2 class="stat-value" id="supplier-stat-cancelled">0</h2>
+            </div>
+          </div>
+
+          <div class="charts-grid">
+            <div class="chart-card glassmorphic">
+              <h3>Customer Gender Demographics</h3>
+              <div class="chart-content flex-center" id="supplier-gender-chart">
+                <!-- Supplier order demographic pie chart -->
+              </div>
+            </div>
+            <div class="chart-card glassmorphic">
+              <h3>Sales Trend</h3>
+              <div class="chart-content" id="supplier-trend-chart">
+                <!-- SVG Line Chart/Trend of supplier items -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Supplier Add Items Tab -->
+        <section id="view-supplier-add" class="app-view hidden">
+          <div class="form-container-card glassmorphic">
+            <h2>Add New Product To Catalog</h2>
+            <form id="supplier-add-product-form" class="standard-form">
+              <div class="input-group">
+                <label for="prod-name">Product Name</label>
+                <input type="text" id="prod-name" placeholder="e.g. Quantum VR Goggles" required>
+              </div>
+
+              <div class="grid-2">
+                <div class="input-group">
+                  <label for="prod-price">Retail Price ($)</label>
+                  <input type="number" id="prod-price" min="1" placeholder="e.g. 299" required>
+                </div>
+                <div class="input-group">
+                  <label for="prod-stock">Initial Stock Level</label>
+                  <input type="number" id="prod-stock" min="1" placeholder="e.g. 50" required>
+                </div>
+              </div>
+
+              <div class="input-group">
+                <label for="prod-description">Product Description</label>
+                <textarea id="prod-description" rows="3" placeholder="Describe features, metrics, materials..." required></textarea>
+              </div>
+
+              <div class="input-group">
+                <label>Product Visual (Image Selection)</label>
+                <div class="image-preset-picker">
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="phone" checked>
+                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=100&auto=format&fit=crop" alt="phone">
+                    <span>Phone</span>
+                  </label>
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="watch">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&auto=format&fit=crop" alt="watch">
+                    <span>Watch</span>
+                  </label>
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="shoes">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&auto=format&fit=crop" alt="shoes">
+                    <span>Shoes</span>
+                  </label>
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="hoodie">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&auto=format&fit=crop" alt="hoodie">
+                    <span>Hoodie</span>
+                  </label>
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="pack">
+                    <img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=100&auto=format&fit=crop" alt="pack">
+                    <span>Backpack</span>
+                  </label>
+                  <label class="preset-label">
+                    <input type="radio" name="prod-image-select" value="custom">
+                    <div class="custom-img-placeholder"><i data-lucide="link"></i></div>
+                    <span>URL</span>
+                  </label>
+                </div>
+                <input type="url" id="prod-image-url" placeholder="Paste custom image URL here..." class="hidden">
+              </div>
+
+              <div id="add-product-success" class="form-success hidden">Product added successfully!</div>
+              <button type="submit" class="btn btn-primary btn-block">Add Product to Catalog</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Supplier Orders Tab -->
+        <section id="view-supplier-orders" class="app-view hidden">
+          <div class="table-container glassmorphic">
+            <div class="table-header">
+              <h2>Purchase Orders</h2>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer Name</th>
+                  <th>Purchased Item</th>
+                  <th>Qty</th>
+                  <th>Total</th>
+                  <th>Address</th>
+                  <th>Mobile</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="supplier-orders-table-body">
+                <!-- Orders dynamically injected -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Supplier Stock Tab -->
+        <section id="view-supplier-stock" class="app-view hidden">
+          <div class="stock-container">
+            <div class="stock-cards-grid" id="supplier-stock-grid">
+              <!-- Stock levels dynamically populated -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ================= USER VIEWS ================= -->
+        <!-- User Shop Tab -->
+        <section id="view-user-shop" class="app-view hidden">
+          <div class="shop-layout-grid">
+            <!-- Product Grid -->
+            <div class="products-container">
+              <div class="products-grid" id="shop-products-grid">
+                <!-- Products dynamically injected -->
+              </div>
+            </div>
+
+            <!-- Floating Sidebar Cart Panel -->
+            <div class="cart-panel glassmorphic">
+              <div class="cart-header">
+                <h3>Shopping Cart</h3>
+                <span id="cart-count" class="badge">0 items</span>
+              </div>
+              <div class="cart-items" id="cart-items-container">
+                <div class="cart-empty-state">
+                  <i data-lucide="shopping-cart"></i>
+                  <p>Your cart is empty</p>
+                </div>
+              </div>
+              <div class="cart-summary">
+                <div class="cart-row">
+                  <span>Subtotal</span>
+                  <span id="cart-subtotal">$0.00</span>
+                </div>
+                <div class="cart-row">
+                  <span>Shipping</span>
+                  <span class="free-shipping">FREE</span>
+                </div>
+                <hr>
+                <div class="cart-row grand-total">
+                  <span>Total</span>
+                  <span id="cart-total">$0.00</span>
+                </div>
+                <button id="checkout-btn" class="btn btn-primary btn-block" disabled>
+                  <i data-lucide="credit-card"></i> Proceed to Checkout
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- User Dashboard Tab -->
+        <section id="view-user-dashboard" class="app-view hidden">
+          <div class="stats-row">
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Orders Placed</span>
+                <i data-lucide="shopping-bag" class="icon-user"></i>
+              </div>
+              <h2 class="stat-value" id="user-stat-orders">0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Total Expended</span>
+                <i data-lucide="dollar-sign" class="icon-sales"></i>
+              </div>
+              <h2 class="stat-value" id="user-stat-spent">$0</h2>
+            </div>
+            <div class="stat-card glassmorphic">
+              <div class="stat-header">
+                <span class="stat-label">Pending Shipments</span>
+                <i data-lucide="truck" class="icon-supplier"></i>
+              </div>
+              <h2 class="stat-value" id="user-stat-pending">0</h2>
+            </div>
+          </div>
+
+          <div class="table-container glassmorphic margin-top-lg">
+            <div class="table-header">
+              <h2>My Order History</h2>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Total Spent</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Delivery Address</th>
+                  <th>Mobile Entered</th>
+                </tr>
+              </thead>
+              <tbody id="user-orders-table-body">
+                <!-- User orders dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+
+  <!-- ================= MODALS ================= -->
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="modal-backdrop hidden">
+    <div class="modal-content glassmorphic">
+      <div class="modal-header">
+        <h2>Complete Order Payment</h2>
+        <button id="close-checkout-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="cod-banner">
+          <i data-lucide="wallet"></i>
+          <div>
+            <h4>Cash on Delivery (COD) Enabled</h4>
+            <p>Payment is processed only in cash upon product delivery. No upfront payment details are required.</p>
+          </div>
+        </div>
+
+        <form id="checkout-form" class="standard-form">
+          <div class="input-group">
+            <label for="checkout-mobile">Mobile Phone Number</label>
+            <div class="input-wrapper">
+              <i data-lucide="phone"></i>
+              <input type="tel" id="checkout-mobile" placeholder="e.g. 555-0199" required>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="checkout-address">Full Shipping Address</label>
+            <div class="input-wrapper">
+              <i data-lucide="map-pin"></i>
+              <textarea id="checkout-address" rows="3" placeholder="Address, City, Postal Code" required></textarea>
+            </div>
+          </div>
+          <div class="order-overview-summary">
+            <div class="summary-line"><span>Items total:</span><span id="modal-summary-subtotal">$0</span></div>
+            <div class="summary-line font-bold"><span>Total Cash to Pay:</span><span id="modal-summary-total">$0</span></div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Confirm Cash On Delivery Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Edit Account Modal -->
+  <div id="edit-user-modal" class="modal-backdrop hidden">
+    <div class="modal-content glassmorphic">
+      <div class="modal-header">
+        <h2>Edit Account Details</h2>
+        <button id="close-edit-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="admin-edit-user-form" class="standard-form">
+          <input type="hidden" id="edit-user-id">
+          <div class="input-group">
+            <label for="edit-user-name">Account Name</label>
+            <input type="text" id="edit-user-name" required>
+          </div>
+          <div class="input-group">
+            <label for="edit-user-email">Email Address</label>
+            <input type="email" id="edit-user-email" required>
+          </div>
+          <div class="grid-2">
+            <div class="input-group">
+              <label for="edit-user-gender">Gender</label>
+              <select id="edit-user-gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="edit-user-status">Account Status</label>
+              <select id="edit-user-status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Suspended</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="edit-user-mobile">Mobile Phone</label>
+            <input type="tel" id="edit-user-mobile">
+          </div>
+          <div class="input-group">
+            <label for="edit-user-address">Billing / Physical Address</label>
+            <textarea id="edit-user-address" rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Save Updates</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- App scripts module loader -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
