@@ -1,4 +1,4 @@
-# Multi-Role E-Commerce Shopping Portal
+# E-Commerce-ETL
 ## Project Description
 A premium, interactive single-page e-commerce dashboard and marketplace application. It features a developer-friendly sandbox to dynamically switch between three user roles: **Admin**, **Supplier**, and **User (Buyer)**. The application handles catalog product adjustments, shopping cart management, order dispatches, and custom SVG analytical data visualization, storing all state locally in the browser's `localStorage` to ensure persistence across page reloads.
 ---
